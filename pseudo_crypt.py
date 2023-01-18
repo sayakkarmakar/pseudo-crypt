@@ -16,11 +16,13 @@ def main():
               mode = 'decrypt'
               translated = decryptMessage(key, message)
     print('\n%sed text: \n%s' % (mode.title(), translated))
+    
 def getKeyParts(k):
     key = generate(k)
     keyA = key // len(SYMBOLS)
     keyB = key % len(SYMBOLS)
     return (keyA, keyB)
+
 def encryptMessage(key, message):
     keyA, keyB = getKeyParts(key)
     checkKeys(keyA, keyB, 'encrypt')
@@ -33,6 +35,7 @@ def encryptMessage(key, message):
         else:
             cipherText += symbol
     return cipherText
+
 def decryptMessage(key, message):
     keyA, keyB = getKeyParts(key)
     checkKeys(keyA, keyB, 'decrypt')
@@ -45,6 +48,7 @@ def decryptMessage(key, message):
         else:
             plainText += symbol
     return plainText
+
 def checkKeys(keyA, keyB, mode):
     if keyA == 1 and mode == 'encrypt':
         sys.exit('The affine cipher becomes weak when key A is set to 1. Choose different key')
@@ -54,6 +58,7 @@ def checkKeys(keyA, keyB, mode):
         sys.exit('Key A must be greater than 0 and key B must be between 0 and %s.' % (len(SYMBOLS) - 1))
     if gcd(keyA, len(SYMBOLS)) != 1:
         sys.exit('Key A %s and the symbol set size %s are not relatively prime. Choose a different key.' % (keyA, len(SYMBOLS)))
+        
 def gcd(a, b):
     while a != 0:
         a, b = b % a, a
@@ -67,7 +72,8 @@ def findModInverse(a, m):
     while v3 != 0:
         q = u3 // v3
         v1, v2, v3, u1, u2, u3 = (u1 - q * v1), (u2 - q * v2), (u3 - q *v3), v1, v2, v3
-    return u1 % m     
+    return u1 % m
+
 def memristor(xinit, yinit, zinit, num_steps):
 
     dt = 0.01
@@ -90,6 +96,7 @@ def memristor(xinit, yinit, zinit, num_steps):
         ys[i + 1] = ys[i]+(a*(-xs[i] -((ys[i])**3*b+c)) * dt)
         zs[i + 1] = zs[i]+(( d* ys[i]/e) * dt)
     return xs, ys, zs
+
 def generate(k):
     xkey, ykey, zkey = memristor(10*k,20*k,30*k,1)
     key = abs(int(zkey[1]+xkey[1]*ykey[1]))
